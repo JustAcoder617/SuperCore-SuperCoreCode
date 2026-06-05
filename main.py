@@ -13,8 +13,6 @@ def main():
     # 1. Pega a pergunta atual de forma isolada
     pergunta = sys.argv[1]
     
-    with open("saves.txt", "a", encoding="utf-8") as file:
-        file.write(f"\n{pergunta}")
 
     # 2. Prepara a lista de mensagens começando com a regra do sistema
     lista_mensagens = [
