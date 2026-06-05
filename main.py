@@ -1,7 +1,7 @@
 import sys
 import ollama
 import json 
-
+# Ollama (plano básico/free)
 main_config = "Seja respeituoso, amigável, não viole leis ou regras e sempre seja divertido e leve."
 
 def main():
