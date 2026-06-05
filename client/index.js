@@ -1,39 +1,16 @@
 const button_env = document.getElementById("enviar");
 const campo_pergunta = document.getElementById("ask");
 
-// 1. Busca o histórico local
-function obterHistoricoLocal() {
-    try {
-        const historicoSalvo = localStorage.getItem("historico_chat");
-        return historicoSalvo ? JSON.parse(historicoSalvo) : [];
-    } catch (e) {
-        console.error("Erro ao ler LocalStorage:", e);
-        return [];
-    }
-}
-
-// 2. Salva novos blocos de mensagem no histórico local
-function salvarNoHistoricoLocal(role, content) {
-    const historico = obterHistoricoLocal();
-    historico.push({ role: role, content: content });
-    
-    // Mantém as últimas 10 mensagens para manter o contexto leve
-    if (historico.length > 10) {
-        historico.shift(); 
-    }
-    localStorage.setItem("historico_chat", JSON.stringify(historico));
-}
+const dadosParaEnviar = {
+    content: "",
+    model: ""
+};
 
 async function wait_for_ia_reponse(perguntaAtual) {
     document.getElementById("response").innerHTML = `Pensando...`;
-    
-    const historicoCompleto = obterHistoricoLocal();
 
-    // Objeto formatado de forma limpa para o Node receber
-    const dadosParaEnviar = {
-        content: perguntaAtual,
-        historico: historicoCompleto
-    };
+    dadosParaEnviar.content = perguntaAtual;
+    dadosParaEnviar.model = get_model_ia_use();
 
     try {
         let response = await fetch('/chat', {
@@ -46,14 +23,7 @@ async function wait_for_ia_reponse(perguntaAtual) {
         
         if (response.ok) {
             const dadosResposta = await response.json();
-            const respostaTexto = dadosResposta.message;
-            
-            document.getElementById("response").innerText = respostaTexto;
-            
-            // Registra a interação atual no histórico
-            salvarNoHistoricoLocal("user", perguntaAtual);
-            salvarNoHistoricoLocal("assistant", respostaTexto);
-            
+            document.getElementById("response").innerText = dadosResposta.message;
         } else {
             document.getElementById("response").innerText = "Desculpe, mas ocorreu um erro no servidor.";
         }
@@ -61,6 +31,31 @@ async function wait_for_ia_reponse(perguntaAtual) {
         console.error(err);
         document.getElementById("response").innerText = "Erro de conexão com o servidor.";
     }
+}
+
+let checkboxes = document.querySelectorAll("input[name=option]");
+checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            checkboxes.forEach(outroCheckbox => {
+                if (outroCheckbox !== this) {
+                    outroCheckbox.checked = false;
+                }
+            });
+        }
+    });
+});
+
+function get_model_ia_use(){
+    const olm_3_2 = document.getElementById("3.2");
+    const gemma4 = document.getElementById("gemma4");
+    const deep_seek = document.getElementById("ds1");
+
+    if (olm_3_2 && olm_3_2.checked) return "llama3.2";
+    if (gemma4 && gemma4.checked) return "gemma4";
+    if (deep_seek && deep_seek.checked) return "deepseek-r1";
+    
+    return null; 
 }
 
 button_env.addEventListener("click", async () => {

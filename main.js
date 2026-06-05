@@ -16,22 +16,15 @@ app.use(express.static(path.join(__dirname, 'client')));
 
 app.post('/chat', (req, res) => {
     const content = req.body.content;
-    const historicoRaw = req.body.historico;
+    const modelo_ia = req.body.model;
 
-    console.log("=== DEBUG DA MEMÓRIA ===");
+    console.log("=== DEBUG DA REQUISIÇÃO ===");
     console.log("Pergunta recebida:", content);
-    console.log("Histórico bruto recebido do Front:", historicoRaw);
+    console.log("Modelo escolhido:", modelo_ia);
+    console.log("===========================");
 
-    // Se o histórico bruto vier como undefined ou inválido, tratamos como uma lista vazia
-    const stringHistorico = historicoRaw ? JSON.stringify(historicoRaw) : "[]";
-    
-    // Transforma a string JSON em Base64 para passar com segurança pelo terminal do OS
-    const historicoBase64 = Buffer.from(stringHistorico).toString('base64');
-    console.log("Histórico enviado (Codificado em Base64)");
-    console.log("========================");
-
-    // Dispara o script passando a pergunta e a string segura em Base64
-    const processoPython = spawn('python3', ['main.py', content, historicoBase64]);
+    // Dispara o script Python passando apenas a pergunta e o modelo por argumento
+    const processoPython = spawn('python3', ['main.py', content, modelo_ia]);
 
     let respostaDaIA = "";
 
