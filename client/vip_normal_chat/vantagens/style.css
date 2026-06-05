@@ -1,6 +1,95 @@
+@import url(https://fonts.googleapis.com/css2?family=Bungee&family=Luckiest+Guy&family=Share+Tech&display=swap);
 .st{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    font-family: "Bungee", cursive;
+}
+.st hr{
+    width: 150px;
+    height: 25px;
+    border-radius: 10px;
+    background-image: linear-gradient(to right, #00ff4c94, #ff0000);
+}
+.st h1{
+    background-image: linear-gradient(to right, yellow,goldenrod);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+.main p{
+    font-family: "Share tech", cursive;
+    font-weight: bold;
+}
+.main h3{
+    font-family: "luckiest guy", cursive;
+    font-weight: bold;
+    color: yellowgreen;
+}
+ol{
+    font-family: "Share Tech";
+}
+h2{
+    color:aquamarine;
+    font-family: "Noto Sans", cursive;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+body{
+    background-color: rgb(91, 91, 0);
+}
+h3{
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+ol{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 19px;
+}
+li{
+    margin-left: 18px;
+    background-color: rgb(0, 92, 76);
+    border-radius: 10px;
+    padding: 10px;
+}
+.main p{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+a{
+    text-decoration: none;
+    color: yellowgreen;
+    font-family: "Bungee", cursive;
+    transition: 0.5s ease;
+}
+a:hover{
+    color: rgba(9, 255, 0, 0.607);
+}
+button{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    background-color: rgb(85, 0, 255);
+    border-radius: 10px;
+    width: 100px;
+    height: 50px;
+    box-shadow: 5px 5px 5px greenyellow;
+    transition: 0.5s ease;
+}
+button:hover{
+    box-shadow: 2px 2px 2px green;
+    transform: translate(5px);
+    background-color: chocolate;
 }
