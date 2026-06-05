@@ -99,10 +99,22 @@ button:hover {
     transition: 0.3s ease;
 }
 a{
-    color: #00bfff;
+    color: #00bfff42;
     font-weight: bold;
 }
 footer{
     position: fixed;
     bottom: 0;
+}
+footer p{
+    color: rgba(240, 255, 255, 0.162);
+}
+a:hover{
+    color: #00bfff;
+}
+#a{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
