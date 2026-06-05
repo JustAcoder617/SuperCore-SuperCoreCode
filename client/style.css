@@ -98,3 +98,11 @@ button:hover {
     font-weight: bold;
     transition: 0.3s ease;
 }
+a{
+    color: #00bfff;
+    font-weight: bold;
+}
+footer{
+    position: fixed;
+    bottom: 0;
+}
