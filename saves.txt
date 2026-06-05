@@ -1,3 +1,6 @@
 
 oq significa comic
 oii tudo bem
+essa pagina de termo de serviço está ficando boa: <!DOCTYPE html> <html lang="en"> <head>     <meta charset="UTF-8">     <meta name="viewport" content="width=device-width, initial-scale=1.0">     <title>SuperCore || Termos de Usuário Final</title>     <link rel="stylesheet" href="style.css"> </head> <body>     <div class="start">         <h1>SuperCore: Termo De Usuário Final</h1>         <hr>     </div>     <h1>Seção 1: Descrição</h1>     <p>O SuperCore é uma Inteligencia Artificial (IA) focada em:         <ol>             <li>Responder perguntas;</li>             <li>Encontrar soluções para problemas;</li>             <li>Servir de integração para sistemas;</li>             <li>Demais outras áreas em que necessite de informação.</li>         </ol>     </p>     <p>Logo, dar-se a entender que, pelo fato de que o produto, na maioria dos casos, acessa a internet, as informações fornecidas por ele podem estar erradas ou o produto pode apresentar falhas.</p>     <p><span>Nota importante: </span> A empresa/contratada não se responsabilisa por <span>qualquer</span> prejuízo causado em virtude do produto por ela fornecido, </p> </body> </html>
+qual seu nome
+qual seu nome

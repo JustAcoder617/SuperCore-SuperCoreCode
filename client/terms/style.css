@@ -1,0 +1,18 @@
+body{
+    background: linear-gradient(135deg, #dddddd, #f4f4f4);
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.start h1{
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+}
+span{
+    font-weight: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-decoration: underline;
+    color: crimson;
+}
+*{
+    justify-content: center;
+}

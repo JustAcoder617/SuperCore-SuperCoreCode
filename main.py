@@ -2,7 +2,7 @@ import sys
 import ollama
 import json 
 # Ollama (plano básico/free)
-main_config = "Seja respeituoso, amigável, não viole leis ou regras e sempre seja divertido e leve."
+main_config = "Seja respeituoso, amigável, não viole leis ou regras e sempre seja divertido e leve. Seu nome é SuperCore."
 
 def main():
     # Agora precisamos de pelo menos o argumento da pergunta (sys.argv[1])
@@ -25,7 +25,7 @@ def main():
 # 3. Se o Node tiver enviado o histórico no segundo argumento...
     if len(sys.argv) > 2 and sys.argv[2].strip():
         try:
-            import base64  # Garanta que o import base64 está no topo do arquivo!
+            import base64
             
             # 1. Pega o Base64 que veio do Node e decodifica para bytes
             dados_decorados = base64.b64decode(sys.argv[2])
