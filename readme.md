@@ -26,16 +26,6 @@
 * ❌ Impedir uso ilegal
 * ❌ Restringir uso indevido da IA
 * ⚠️ Limitar responsabilidade da empresa fornecedora
-# 🏗️ Estrutura do Projeto
-```bash
-back-end-com-ia/
-│
-├── client/        # Parte visual (HTML + CSS)
-├── main.js        # Servidor Node.js
-├── main.py        # Integração/Processamento com IA
-├── .gitignore
-└── README.md
-```
 
 # 🛠 Tecnologias Utilizadas
 * 🟢 JavaScript (Node.js) — Backend principal
@@ -45,8 +35,8 @@ back-end-com-ia/
 
 * 1️⃣ Clone o repositório
 ```bash
-git clone https://github.com/JustAcoder617/back-end-com-ia.git
-cd back-end-com-ia
+git clone https://github.com/JustAcoder617/SuperCore.git
+cd SuperCore
 ```
 * 2️⃣ Instale as dependências (Node.js)
 ```bash
@@ -65,14 +55,12 @@ python main.py
 
 ### O projeto foi pensado com:
 
-* 🕵️‍♂️ Validção de entrada
 * 🚫 Regras contra uso malicioso
-* 🛡️ Estrutura preparada para integração com CAPTCHA
 * 📜 Termos de Uso explícitos
 
 ### O uso do sistema implica na aceitação dos Termos de Usuário Final incluídos no projeto.
 
-### A IA pode apresentar erros ou imprecisões. O uso indevido pode resultar em bloqueio do acesso.
+### A IA pode apresentar erros ou imprecisões.
 
 # 🚧 Status do Projeto
 
