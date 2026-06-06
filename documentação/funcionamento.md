@@ -1,5 +1,5 @@
 # Como a IA do SuperCore funciona?
-A IA/LLM do SUperCore funciona assim:
+A IA/LLM do SuperCore funciona assim:
 
 * primeiro, no front-end, o usuário faz uma pergunta com um modelo específico.
 * Depois, o front-end envia essa mensagem para a o back-end em um formato JSON, com a pergunta e o modelo.
