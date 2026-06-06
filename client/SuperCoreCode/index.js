@@ -1,5 +1,5 @@
 const env_btn = document.getElementById("env");
-// CORRIGIDO: Agora o ID bate com o "response" do seu HTML
+// CORRIGIDO: Agora o ID bate com o "response" do HTML
 const reponse_entry = document.getElementById("response"); 
 let user_to_ia_data = document.getElementById("ask");
 
