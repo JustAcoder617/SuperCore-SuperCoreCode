@@ -1,35 +1,51 @@
 import sys
 import ollama
-import datetime as dt
+# ALTERADO: Importando a classe datetime de dentro do módulo datetime
+from datetime import datetime
 import zoneinfo
+
 main_config = "Seja respeituoso, amigável, não viole leis ou regras e sempre seja divertido e leve. Seu nome é SuperCore."
+
 def set_main_config_of_model(model):
     global main_config
-    if  model=="llama3.2":
+    if model == "llama3.2":
         return
-    if model=="qwen2.5-coder:1.5b":
-        main_config="Seja um copiloto, pronto para receber grandes quantias de código bruto de uma vez só, pronto para resolver bugs rápidos, gerar código e ser o professor de uma linguagem específica (caso o usuário pedir)."
-    if model=="gemma" or model=="gemma:7b":
-        main_config="Seja o copiloto do usuário, pronto para receber Muito código, resolver bugs massivos, pensar rápido, resolver questões, checar importações, sugerir commandos de terminal e fazer uma varredura completa no código solicitado."
+    if model == "qwen2.5-coder:1.5b":
+        main_config = "Seja um copiloto, pronto para receber grandes quantias de código bruto de uma vez só, pronto para resolver bugs rápidos, gerar código e ser o professor de uma linguagem específica (caso o usuário pedir)."
+    if model == "gemma" or model == "gemma:7b":
+        main_config = "Seja o copiloto do usuário, pronto para receber Muito código, resolver bugs massivos, pensar rápido, resolver questões, checar importações, sugerir commandos de terminal e fazer uma varredura completa no código solicitado."
+
 def main():
-    fuso_brasil=zoneinfo.ZoneInfo("America/SaoPaulo")
-    agora_brasil=dt.now(fuso_brasil)
+    # Agora que usamos 'from datetime import datetime', essa linha funciona perfeitamente:
+    fuso_brasil = zoneinfo.ZoneInfo("America/Sao_Paulo")
+    agora_brasil = datetime.now(fuso_brasil)
+    
+    # Adicionando uma quebra de linha (\n) para os logs não ficarem todos colados na mesma linha
     data_formatada = agora_brasil.strftime("%d/%m/%Y %H:%M:%S")
+    
     if len(sys.argv) < 2:
         print("Erro: Nenhuma pergunta enviada.")
         return
+        
     pergunta = sys.argv[1]
     modelo = sys.argv[2] if len(sys.argv) > 2 else "llama3.2"
-    ip=sys.argv[3]
+    ip = sys.argv[3] if len(sys.argv) > 3 else "IP_NAO_DETECTADO" # Evita quebrar se o Node esquecer de passar o IP
+    
     if modelo:
         modelo = modelo.lower()
+    
+    # Executa a função para atualizar a persona baseada no modelo escolhido
+    set_main_config_of_model(modelo)
     
     lista_mensagens = [
         {"role": "system", "content": main_config},
         {"role": "user", "content": pergunta}
     ]
+    
+    # Gravando o log com quebra de linha no final
     with open("logs.txt", "a") as file:
-        file.write(f"Novo acesso em {data_formatada}. IP: {ip}")
+        file.write(f"Novo acesso em {data_formatada}. IP: {ip}\n")
+        
     try:
         resposta = ollama.chat(
             model=modelo,
