@@ -24,7 +24,6 @@ async function esperar_resposta_ia(data) {
 }
 
 env_btn.addEventListener("click", async () => {
-    // Se o input estiver vazio, nem gasta processamento
     if (!user_to_ia_data.value.trim()) {
         alert("Digite uma pergunta primeiro!");
         return;
@@ -41,10 +40,8 @@ env_btn.addEventListener("click", async () => {
     const resultadoBackEnd = await esperar_resposta_ia(data);
 
     if (resultadoBackEnd !== "ERROR") {
-        // CORRIGIDO: Acessa a propriedade que vem do seu servidor Node.js
-        // Se o seu servidor devolver res.json({ resposta: ... }), usamos resultadoBackEnd.resposta
-        reponse_entry.innerText = resultadoBackEnd.resposta || resultadoBackEnd;
-        user_to_ia_data.value = ""; // Limpa o input após enviar
+        reponse_entry.innerText = resultadoBackEnd.message || resultadoBackEnd;
+        user_to_ia_data.value = "";
     } else {
         reponse_entry.innerText = "Ocorreu um erro no servidor! Tente Novamente.";
     }
