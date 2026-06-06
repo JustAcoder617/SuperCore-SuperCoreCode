@@ -50,6 +50,7 @@ app.get("/", (req, res) =>{
 app.get("/chat" , (req, res) => {
     res.status(404).send("Only Post, if you are an normal user, please leave this route.");
 })
+//Nota rápida: o ADM parou o projeto rapidinho, pois vai aprender SQL. Quando voltar, um novo sistema de login vai ser developado.
 // =========================================================================
 app.listen(PORT, () => {
     console.log(`Servidor RODANDO na porta: ${PORT}`);
