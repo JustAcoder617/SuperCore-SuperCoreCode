@@ -5,7 +5,7 @@ let user_to_ia_data = document.getElementById("ask");
 
 async function esperar_resposta_ia(data) {
     try {
-        const response = await fetch("/chat", { // Lembra de mapear essa rota no Node (/chat)
+        const response = await fetch("/chat", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -14,7 +14,7 @@ async function esperar_resposta_ia(data) {
         });
 
         if (response.ok) {
-            return await response.json(); // Retorna o objeto JSON do back-end
+            return await response.json();
         } else {
             return "ERROR";
         }

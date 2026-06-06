@@ -2,20 +2,25 @@ import sys
 import ollama
 
 main_config = "Seja respeituoso, amigável, não viole leis ou regras e sempre seja divertido e leve. Seu nome é SuperCore."
-
+def set_main_config_of_model(model):
+    global main_config
+    if  model=="llama3.2":
+        return
+    if model=="qwen2.5-coder:1.5b":
+        main_config="Seja um copiloto, pronto para receber grandes quantias de código bruto de uma vez só, pronto para resolver bugs rápidos, gerar código e ser o professor de uma linguagem específica (caso o usuário pedir)."
+    if model=="gemma" or model=="gemma:7b":
+        main_config="Seja o copiloto do usuário, pronto para receber Muito código, resolver bugs massivos, pensar rápido, resolver questões, checar importações, sugerir commandos de terminal e fazer uma varredura completa no código solicitado."
 def main():
     if len(sys.argv) < 2:
         print("Erro: Nenhuma pergunta enviada.")
         return
 
-    # Captura os dois argumentos diretos enviados pelo Node
     pergunta = sys.argv[1]
     modelo = sys.argv[2] if len(sys.argv) > 2 else "llama3.2"
     
     if modelo:
         modelo = modelo.lower()
-
-    # Prepara o envio contendo apenas as diretrizes do sistema e a pergunta atual
+    
     lista_mensagens = [
         {"role": "system", "content": main_config},
         {"role": "user", "content": pergunta}
