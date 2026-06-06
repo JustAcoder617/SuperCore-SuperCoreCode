@@ -13,7 +13,8 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'client')));
-
+app.enable("trust proxy")
+//================================ rotas api ===================================
 app.post('/chat', (req, res) => {
     const content = req.body.content;
     const modelo_ia = req.body.model;
@@ -22,9 +23,8 @@ app.post('/chat', (req, res) => {
     console.log("Pergunta recebida:", content);
     console.log("Modelo escolhido:", modelo_ia);
     console.log("===========================");
-
-    // Dispara o script Python passando apenas a pergunta e o modelo por argumento
-    const processoPython = spawn('python3', ['main.py', content, modelo_ia]);
+    let ip=req.ip;
+    const processoPython = spawn('python3', ['main.py', content, modelo_ia, ip]);
 
     let respostaDaIA = "";
 
@@ -44,7 +44,13 @@ app.post('/chat', (req, res) => {
         }
     });
 });
-
+app.get("/", (req, res) =>{
+    res.sendStatus(200);
+})
+app.get("/chat" , (req, res) => {
+    res.status(404).send("Only Post, if you are an normal user, please leave this route.");
+})
+// =========================================================================
 app.listen(PORT, () => {
     console.log(`Servidor RODANDO na porta: ${PORT}`);
 });

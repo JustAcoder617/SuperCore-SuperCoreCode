@@ -1,6 +1,7 @@
 import sys
 import ollama
-
+import datetime as dt
+import zoneinfo
 main_config = "Seja respeituoso, amigável, não viole leis ou regras e sempre seja divertido e leve. Seu nome é SuperCore."
 def set_main_config_of_model(model):
     global main_config
@@ -11,13 +12,15 @@ def set_main_config_of_model(model):
     if model=="gemma" or model=="gemma:7b":
         main_config="Seja o copiloto do usuário, pronto para receber Muito código, resolver bugs massivos, pensar rápido, resolver questões, checar importações, sugerir commandos de terminal e fazer uma varredura completa no código solicitado."
 def main():
+    fuso_brasil=zoneinfo.ZoneInfo("America/SaoPaulo")
+    agora_brasil=dt.now(fuso_brasil)
+    data_formatada = agora_brasil.strftime("%d/%m/%Y %H:%M:%S")
     if len(sys.argv) < 2:
         print("Erro: Nenhuma pergunta enviada.")
         return
-
     pergunta = sys.argv[1]
     modelo = sys.argv[2] if len(sys.argv) > 2 else "llama3.2"
-    
+    ip=sys.argv[3]
     if modelo:
         modelo = modelo.lower()
     
@@ -25,7 +28,8 @@ def main():
         {"role": "system", "content": main_config},
         {"role": "user", "content": pergunta}
     ]
-
+    with open("logs.txt", "a") as file:
+        file.write(f"Novo acesso em {data_formatada}. IP: {ip}")
     try:
         resposta = ollama.chat(
             model=modelo,
