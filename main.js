@@ -2,11 +2,25 @@ const morgan = require("morgan");
 const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
+dotenv.config();
 const cors = require("cors");
 const path = require("path");
 const { spawn } = require('child_process');
-
-dotenv.config();
+const mysql=require("mysql2");
+const { error } = require("console");
+const db=mysql.createConnection({
+    host: process.env.db_host,
+    user: process.env.db_user,
+    password: process.env.db_psw,
+    database: "supercore_db"
+});
+db.connect((error)=>{
+    if(error){
+        console.error(`Erro ao conectar ao database: ${error}`)
+    } else{
+        console.log("Conectado om sucesso ao database.")
+    }
+})
 let PORT = process.env.PORT || 5001; 
 
 app.use(morgan("dev"));
@@ -48,7 +62,7 @@ app.get("/", (req, res) =>{
     res.sendStatus(200);
 })
 app.get("/chat" , (req, res) => {
-    res.status(404).send("Only Post, if you are an normal user, please leave this route.");
+    res.status(403).send("Only Post, if you are an normal user, please leave this route.");
 })
 //Nota rápida: o ADM parou o projeto rapidinho, pois vai aprender SQL. Quando voltar, um novo sistema de login vai ser developado.
 // =========================================================================
