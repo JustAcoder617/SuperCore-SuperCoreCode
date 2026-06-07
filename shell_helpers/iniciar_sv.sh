@@ -1,10 +1,10 @@
 #!/bin/bash
 echo "Iniciando servidor..."
 
-. venv/bin/activate
+. ../venv/bin/activate
 
 sleep 0.5
 
-node main.js
+node ../main.js
 
 exit 0
