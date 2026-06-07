@@ -1,5 +1,5 @@
 # Dependencias do SuperCore
-O superCore e o SUperCoreCode tem muitas dependecias, tais como:  
+O superCore e o SuperCoreCode tem muitas dependecias, tais como:  
 ### Super Core e Core Code:
 * morgan (para fins de debug)
 * express
