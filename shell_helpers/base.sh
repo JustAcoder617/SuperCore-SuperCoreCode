@@ -10,7 +10,6 @@ fi
 shell_helpers=(
     "recuperar_github_com_divergencias.sh"
     "iniciar_sv.sh"
-    "permissao_helpers.sh"
 )
 
 chmod +x "${shell_helpers[@]}"
