@@ -73,37 +73,45 @@ app.get("/chat", (req, res) => {
     res.status(403).send("Only Post, if you are an normal user, please leave this route.");
 });
 
+
 app.post("/login", (req, res) => {
     const { user, password } = req.body;
-    
+
     const str = "SELECT * FROM Users WHERE Nome = ?";
 
     db.query(str, [user], async (err, result) => {
-        if (err) {
-            console.error("Erro no banco:", err);
-            return res.status(500).send("<strike>AAAA BROCACHO ITS THE END OF WORL-</strike>"); 
-        }
-        if (result.length === 0) {
+        if (err) return res.status(500).json({ message: "Erro no servidor" });
+
+        if (result.length === 0)
             return res.status(401).json({ message: "Usuário ou senha incorretos" });
-        }
 
         const usuarioLogado = result[0];
+
         const senhaCorreta = await bcrypt.compare(password, usuarioLogado.Senha);
 
-        if (!senhaCorreta) {
+        if (!senhaCorreta)
             return res.status(401).json({ message: "Usuário ou senha incorretos" });
-        }
-
-        res.status(200).json({
-            message: "Login efetuado com sucesso!",
-            user: {
+        const token = jwt.sign(
+            {
                 id: usuarioLogado.id,
                 nome: usuarioLogado.Nome
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: "3d"
             }
+        );
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+            maxAge: 3 * 24 * 60 * 60 * 1000
         });
+
+        res.status(200).json({ message: "Login efetuado com sucesso!" });
     });
 });
-
 app.post("/login/create", async (req, res) => {
     const { user, password } = req.body;
 
@@ -132,9 +140,6 @@ app.post("/login/create", async (req, res) => {
         res.status(500).json({ message: "Erro interno no servidor." });
     }
 });
-app.post("/get_hash", async (req, res) =>{
-
-})
 // =========================================================================
 app.listen(PORT, () => {
     console.log(`Servidor RODANDO na porta: ${PORT}`);
