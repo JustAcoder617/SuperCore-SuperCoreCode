@@ -8,7 +8,7 @@ const path = require("path");
 const { spawn } = require('child_process');
 const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
-
+const jwt=require("jsonwebtoken");
 const db = mysql.createConnection({
     host: process.env.db_host,
     user: process.env.db_user,
@@ -140,6 +140,27 @@ app.post("/login/create", async (req, res) => {
         res.status(500).json({ message: "Erro interno no servidor." });
     }
 });
+app.post("/validate", async (req, res) =>{
+    const JWT_SECRET=process.env.JWT_SECRET
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) {
+            return res.status(701).json({ auth: false, message: "If you don't want to show me your passport, I'm not letting you pass." 
+});
+    }
+
+    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+        if (err) {
+            return res.status(403).json({ auth: false, message: 'Falha ao autenticar o token.' });
+        }
+        req.usuarioId = decoded.id;
+    });
+    return await res.status(200).json({
+        auth: true,
+        message: "Token OK",
+        userId: decoded.id
+    })
+})
 // =========================================================================
 app.listen(PORT, () => {
     console.log(`Servidor RODANDO na porta: ${PORT}`);
