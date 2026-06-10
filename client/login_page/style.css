@@ -1,0 +1,115 @@
+body {
+    background-color: #121214;
+    color: #e1e1e6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.st {
+    text-align: center;
+    max-width: 450px;
+    width: 100%;
+}
+
+h1 {
+    color: #ffffff;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+@keyframes rgbGradiente {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #00b37e, transparent);
+    margin-bottom: 25px;
+}
+
+h2 {
+    color: #a4a4ac;
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.cmp {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 380px;
+    background-color: #202024;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #323238;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+label {
+    font-size: 0.9rem;
+    color: #c4c4cc;
+    font-weight: 600;
+}
+
+input {
+    background-color: #121214;
+    border: 1px solid #323238;
+    padding: 12px;
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+input:focus {
+    outline: none;
+    border-color: #00b37e;
+}
+
+#env {
+    margin-top: 25px;
+    width: 100%;
+    max-width: 380px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    background: #202024;
+    border: 2px solid #00b37e;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#env:hover {
+    background: linear-gradient(135deg, #00b37e 0%, #02815c 100%);
+    border-color: transparent;
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(0, 179, 126, 0.6);
+}
+h1 {
+    font-size: 2.2rem;
+    margin-top: 50px;
+    margin-bottom: 15px;
+    background: linear-gradient(45deg, rgb(255, 0, 128), rgb(0, 255, 255), rgb(0, 255, 128), rgb(255, 255, 0));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: rgbGradiente 4s linear infinite;
+}

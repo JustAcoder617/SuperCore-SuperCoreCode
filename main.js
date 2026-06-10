@@ -66,7 +66,7 @@ app.get("/chat" , (req, res) => {
 });
 app.post("/login", (req, res) => {
     const { user, password } = req.body;
-    const str = "SELECT * FROM Users WHERE Nome = ? AND senha = ?";
+    const str = "SELECT * FROM Users WHERE Nome = ? AND Senha = ?";
 
     db.query(str, [user, password], (err, result) => {
         if (err) {
