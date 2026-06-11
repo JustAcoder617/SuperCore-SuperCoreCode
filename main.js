@@ -15,6 +15,10 @@ const db = mysql.createConnection({
     password: process.env.db_psw,
     database: "supercore_db"
 });
+const cookieParser = require("cookie-parser");
+
+app.use(cookieParser());
+
 
 db.connect((error) => {
     if (error) {
@@ -130,9 +134,17 @@ app.post("/login/create", async (req, res) => {
             }
             
             if (result) {
+                res.cookie("token", token, {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: "strict",
+                    maxAge: 3 * 24 * 60 * 60 * 1000,
+                    path: "/"
+                });
                 return res.status(201).json({
                     message: "Usuário criado com sucesso!"
                 });
+                
             }
         });
     } catch (error) {
@@ -140,27 +152,34 @@ app.post("/login/create", async (req, res) => {
         res.status(500).json({ message: "Erro interno no servidor." });
     }
 });
-app.post("/validate", async (req, res) =>{
-    const JWT_SECRET=process.env.JWT_SECRET
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+app.post("/validate", (req, res) => {
+
+    const token = req.cookies.token;
+
     if (!token) {
-            return res.status(701).json({ auth: false, message: "If you don't want to show me your passport, I'm not letting you pass." 
-});
+        return res.status(401).json({
+            auth: false,
+            message: "Token não encontrado."
+        });
     }
 
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+
         if (err) {
-            return res.status(403).json({ auth: false, message: 'Falha ao autenticar o token.' });
+            return res.status(403).json({
+                auth: false,
+                message: "Token inválido."
+            });
         }
-        req.usuarioId = decoded.id;
+
+        return res.status(200).json({
+            auth: true,
+            message: "Token OK",
+            userId: decoded.id,
+            nome: decoded.nome
+        });
     });
-    return await res.status(200).json({
-        auth: true,
-        message: "Token OK",
-        userId: decoded.id
-    })
-})
+});
 // =========================================================================
 app.listen(PORT, () => {
     console.log(`Servidor RODANDO na porta: ${PORT}`);
