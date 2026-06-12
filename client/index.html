@@ -3,52 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SuperCore</title>
+    <title>SuperCore | Chat IA</title>
+
     <link rel="stylesheet" href="style.css">
     <script src="index.js" defer></script>
 </head>
+
 <body>
-    <div class="st">
-        <h1>Bem vindo ao SuperCore, seu novo chatbot pessoal!</h1>
-        <hr>
-    </div>
-    <br>
-    <main>
-        <h1>Digite sua Pergunta</h1>
-        <input type="text" id="ask" required placeholder="Exemplo: `o que significa Comics?`">
-    </main>
-    <div id="ariab">
+
+<header class="st">
+    <h1>SuperCore</h1>
+    <p>Seu chatbot pessoal com IA avançada</p>
+    <hr>
+</header>
+
+<main class="container">
+
+    <!-- INPUT AREA -->
+    <section class="chat-input">
+        <h2>Digite sua pergunta</h2>
+
+        <input
+            type="text"
+            id="ask"
+            placeholder="Ex: O que significa Comics?"
+            autocomplete="off"
+        >
+
         <button type="button" id="enviar">
-        Enviar
+            Enviar
         </button>
-        <br>
+    </section>
+
+    <!-- MODELOS -->
+    <section class="models glass">
         <details>
-            <summary>
-                Modelos  
-            </summary>
-            <div class="option">
-                <label for="3.2">Olamma 3.2</label>
-                <input type="checkbox" id="3.2" checked name="option">
-                <hr>
-                <label for="g4">Gemma 4</label>
-                <input type="checkbox" id="gm4" name="option">
-                <hr>
-                <label for="ds1">Deep Seek R1</label>
-                <input type="checkbox"  id="ds1" name="option">
+            <summary>Modelos disponíveis</summary>
+
+            <div class="options">
+                <label>
+                    <input type="checkbox" checked>
+                    Olamma 3.2
+                </label>
+
+                <label>
+                    <input type="checkbox">
+                    Gemma 4
+                </label>
+
+                <label>
+                    <input type="checkbox">
+                    DeepSeek R1
+                </label>
             </div>
         </details>
-    </div>
-    <span id="response"> A resposta irá aparecer aqui!!</span>
-    <p id="a">Programador? experimente o <a href="SuperCoreCode/index.html">SuperCoreCode</a></p>
-    <br>
-    <footer>
+    </section>
+
+    <!-- RESPOSTA -->
+    <section id="response" aria-live="polite">
+        A resposta aparecerá aqui...
+    </section>
+
+    <!-- LINKS EXTRAS -->
+    <section class="extras">
         <p>
-            Ao conversar com o SuperCore, você concorda com os <a href="terms/index.html">Termos de Usuário final do SuperCore.</a> e demais regras.
-            <p>Quer mais praticidade e poder de pensamento no SuperCore? <a href="vip_normal_chat/index.html" target="_blank"> Compre o plano Pro!</a> Veja as vantagens de ter o plano Pro <a href="vip_normal_chat/vantagens/ventagens.html">Aqui!</a></p>
-                <p id="a">
-                    O SuperCore é uma IA (inteligencia Artificial) e pode cometer erros.
-            </p>
+            Programador?
+            <a href="SuperCoreCode/index.html">Experimente o SuperCoreCode</a>
         </p>
-    </footer>
+
+        <p>
+            Quer mais poder?
+            <a href="vip_normal_chat/index.html" target="_blank">Assine o plano Pro</a>
+        </p>
+
+        <p>
+            Veja vantagens do plano:
+            <a href="vip_normal_chat/vantagens/ventagens.html">Aqui</a>
+        </p>
+    </section>
+
+</main>
+
+<footer class="footer">
+    <p>
+        Ao usar o SuperCore você concorda com os
+        <a href="terms/index.html">Termos de Uso</a>.
+    </p>
+
+    <p>
+        SuperCore pode cometer erros. Use com senso crítico.
+    </p>
+</footer>
+
 </body>
 </html>
