@@ -1,95 +1,207 @@
-@import url(https://fonts.googleapis.com/css2?family=Bungee&family=Luckiest+Guy&family=Share+Tech&display=swap);
-.st{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-family: "Bungee", cursive;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+:root {
+    --bg1: #0b0f19;
+    --bg2: #0f172a;
+
+    --glass: rgba(255, 255, 255, 0.06);
+    --glass-hover: rgba(255, 255, 255, 0.1);
+    --border: rgba(255, 255, 255, 0.12);
+
+    --text: #e5e7eb;
+    --muted: #9ca3af;
+
+    --primary: #10a37f;
+    --primary-hover: #0d8c6f;
+
+    --shadow: 0 10px 35px rgba(0, 0, 0, 0.45);
+
+    --radius-sm: 12px;
+    --radius-md: 16px;
+    --radius-lg: 18px;
+
+    --transition: 0.25s ease;
 }
-.st hr{
-    width: 150px;
-    height: 25px;
-    border-radius: 10px;
-    background-image: linear-gradient(to right, #00ff4c94, #ff0000);
+
+* {
+    box-sizing: border-box;
 }
-.st h1{
-    background-image: linear-gradient(to right, yellow,goldenrod);
-    background-clip: text;
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    color: var(--text);
+    line-height: 1.6;
+
+    background: radial-gradient(circle at top, #111827 0%, var(--bg1) 60%);
+    overflow-x: hidden;
+}
+
+#particles {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.container {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 56px 20px;
+}
+
+.glass {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    will-change: transform, background;
+}
+
+.glass:hover {
+    background: var(--glass-hover);
+    transform: translateY(-3px);
+}
+
+/* header */
+.st {
+    text-align: center;
+    margin-bottom: 36px;
+    animation: fadeUp 0.7s ease both;
+}
+
+.st h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+
+    background: linear-gradient(90deg, var(--primary), #3b82f6);
     -webkit-background-clip: text;
-    color: transparent;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
-.main p{
-    font-family: "Share tech", cursive;
-    font-weight: bold;
+
+.st hr {
+    width: 140px;
+    height: 3px;
+    margin: 12px auto 0;
+
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--primary), #3b82f6);
 }
-.main h3{
-    font-family: "luckiest guy", cursive;
-    font-weight: bold;
-    color: yellowgreen;
+
+/* typography */
+h2 {
+    text-align: center;
+    color: var(--muted);
+    font-weight: 400;
+    margin-bottom: 10px;
+
+    animation: fadeUp 0.8s ease both;
 }
-ol{
-    font-family: "Share Tech";
+
+h3 {
+    text-align: center;
+    color: var(--primary);
+    margin-bottom: 16px;
 }
-h2{
-    color:aquamarine;
-    font-family: "Noto Sans", cursive;
+
+/* list */
+ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    gap: 14px;
 }
-body{
-    background-color: rgb(91, 91, 0);
+
+li {
+    padding: 18px;
+    border-radius: var(--radius-md);
+
+    background: var(--glass);
+    border: 1px solid var(--border);
+
+    transition: var(--transition);
+    animation: fadeUp 0.6s ease both;
 }
-h3{
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+li:hover {
+    transform: translateY(-3px);
+    background: var(--glass-hover);
+    border-color: rgba(16, 163, 127, 0.6);
 }
-ol{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 19px;
-}
-li{
-    margin-left: 18px;
-    background-color: rgb(0, 92, 76);
-    border-radius: 10px;
-    padding: 10px;
-}
-.main p{
-    display: flex;
-    flex-direction: column;
+
+/* button */
+button {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
+
+    margin: 40px auto;
+    padding: 12px 24px;
+
+    border: none;
+    border-radius: var(--radius-sm);
+
+    background: var(--primary);
+    color: #fff;
+
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: var(--transition);
+    box-shadow: 0 6px 20px rgba(16, 163, 127, 0.25);
+
+    animation: fadeUp 1s ease both;
 }
-a{
+
+button:hover {
+    transform: translateY(-2px) scale(1.03);
+    background: var(--primary-hover);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+button:focus-visible {
+    outline: 2px solid rgba(16, 163, 127, 0.6);
+    outline-offset: 3px;
+}
+
+button a {
+    color: inherit;
     text-decoration: none;
-    color: yellowgreen;
-    font-family: "Bungee", cursive;
-    transition: 0.5s ease;
 }
-a:hover{
-    color: rgba(9, 255, 0, 0.607);
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
-button{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: auto;
-    background-color: rgb(85, 0, 255);
-    border-radius: 10px;
-    width: 100px;
-    height: 50px;
-    box-shadow: 5px 5px 5px greenyellow;
-    transition: 0.5s ease;
-}
-button:hover{
-    box-shadow: 2px 2px 2px green;
-    transform: translate(5px);
-    background-color: chocolate;
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto;
+    }
 }

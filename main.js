@@ -41,7 +41,9 @@ app.enable("trust proxy");
 app.post('/chat', (req, res) => {
     const content = req.body.content;
     const modelo_ia = req.body.model;
-
+    if(modelo_ia=="" || typeof content !="string" || typeof modelo_ia !="string"){
+        return res.status(400).send("Prompt inválido.")
+    }
     console.log("=== DEBUG DA REQUISIÇÃO ===");
     console.log("Pergunta recebida:", content);
     console.log("Modelo escolhido:", modelo_ia);
@@ -80,6 +82,9 @@ app.get("/chat", (req, res) => {
 
 app.post("/login", (req, res) => {
     const { user, password } = req.body;
+        if(!password || !user || user=="" || typeof user !="string" || typeof user !="string" || password=="" || typeof password !="string"){
+        return res.status(400).send("Dados inválidos.")
+    }
 
     const str = "SELECT * FROM Users WHERE Nome = ?";
 
@@ -108,7 +113,7 @@ app.post("/login", (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV,
             sameSite: "strict",
             maxAge: 3 * 24 * 60 * 60 * 1000
         });
@@ -136,7 +141,7 @@ app.post("/login/create", async (req, res) => {
             if (result) {
                 res.cookie("token", token, {
                     httpOnly: true,
-                    secure: true,
+                    secure: process.env.NODE_ENV,
                     sameSite: "strict",
                     maxAge: 3 * 24 * 60 * 60 * 1000,
                     path: "/"
