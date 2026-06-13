@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     /* File Layout */
-    "rootDir": "./src",
+    "rootDir": "./modules",
     "outDir": "./dist",
 
     /* Environment Settings */
@@ -27,5 +27,5 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "include": ["src/**/*"]
+  "include": ["modules/**/*"]
 }
