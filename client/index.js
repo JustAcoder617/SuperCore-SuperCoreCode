@@ -66,4 +66,3 @@ button_env.addEventListener("click", async () => {
         campo_pergunta.value = ""; 
     }
 });
-//NOTA IMPORTANTE: como dito do main.js server-side, eu vou (adm) estudar sql. Quando eu aprender, ai sim vai sair o pro e o login.
