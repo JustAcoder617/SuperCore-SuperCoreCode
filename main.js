@@ -1,15 +1,22 @@
-const morgan = require("morgan");
-const express = require("express");
-const app = express();
-const dotenv = require("dotenv");
+import morgan from "morgan";
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+import { spawn } from "child_process";
+import mysql from "mysql2";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import cookieParser from "cookie-parser";
+
 dotenv.config();
-const cors = require("cors");
-const path = require("path");
-const { spawn } = require('child_process');
-const mysql = require("mysql2");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
+
+const app = express();
+
+// Simulação do __dirname necessária para o modo ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const db = mysql.createConnection({
     host: process.env.db_host,
@@ -33,7 +40,8 @@ let PORT = process.env.PORT || 5001;
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cors());
-app.use(express.static(path.join(__dirname, 'client')));
+app.use(express.static(path.join(__dirname, "client")));
+app.use("/dist", express.static(path.join(__dirname, "dist")));
 app.enable("trust proxy");
 
 const autenticarToken = (req, res, next) => {
@@ -49,7 +57,7 @@ const autenticarToken = (req, res, next) => {
 
 // ================================= rotas api ===================================
 
-app.post('/chat', (req, res) => {
+app.post("/chat", (req, res) => {
     const { content, model: modelo_ia } = req.body;
     
     if (!content || !modelo_ia || typeof content !== "string" || typeof modelo_ia !== "string" || content.trim() === "") {
@@ -62,19 +70,19 @@ app.post('/chat', (req, res) => {
     console.log("===========================");
     
     let ip = req.ip;
-    const processoPython = spawn('python3', ['main.py', content, modelo_ia, ip]);
+    const processoPython = spawn("python3", ["main.py", content, modelo_ia, ip]);
 
     let respostaDaIA = "";
 
-    processoPython.stdout.on('data', (data) => {
+    processoPython.stdout.on("data", (data) => {
         respostaDaIA += data.toString();
     });
 
-    processoPython.stderr.on('data', (data) => {
+    processoPython.stderr.on("data", (data) => {
         console.error(`Erro no Python: ${data}`);
     });
 
-    processoPython.on('close', (code) => {
+    processoPython.on("close", (code) => {
         if (code === 0) {
             res.json({ message: respostaDaIA.trim() });
         } else {
@@ -117,7 +125,7 @@ app.post("/login", (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV,
+            secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
             maxAge: 3 * 24 * 60 * 60 * 1000,
             path: "/"
@@ -189,7 +197,6 @@ app.post("/validate", (req, res) => {
     });
 });
 
-// Rota de Logout útil para limpar o cookie do navegador
 app.post("/logout", (req, res) => {
     res.clearCookie("token");
     return res.status(200).json({ message: "Logout efetuado com sucesso." });
