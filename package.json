@@ -20,5 +20,9 @@
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.11.0",
     "mysql2": "^3.22.5"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3",
+    "typescript": "^6.0.3"
   }
 }

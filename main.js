@@ -57,7 +57,6 @@ app.post('/chat', (req, res) => {
     }
     
     console.log("=== DEBUG DA REQUISIÇÃO ===");
-    console.log("User autenticado:", req.user.nome);
     console.log("Pergunta recebida:", content);
     console.log("Modelo escolhido:", modelo_ia);
     console.log("===========================");
