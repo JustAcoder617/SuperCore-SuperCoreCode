@@ -25,3 +25,4 @@ export async function true_fetch<T = any>(
     const dadosTransformados: T = await response.json();
     return dadosTransformados;
 }
+//This code is under of license of the repo JustAcoder617/SuperCore.

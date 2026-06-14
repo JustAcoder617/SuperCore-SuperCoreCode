@@ -1,4 +1,4 @@
 import {true_fetch} from "/dist/readyfetch.js"
 async function send_to_back(data) {
-    //stoped
+    let response=true_fetch("/login/create", data, true, true)
 }
