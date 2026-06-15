@@ -4,62 +4,62 @@ from datetime import datetime
 import zoneinfo
 import os
 
-# Configuração padrão do SuperCore
-main_config = "Seja respeituoso, amigável, não viole leis ou regras e sempre seja divertido e leve. Seu nome é SuperCore."
-
-def set_main_config_of_model(model):
-    global main_config
-    if model == "llama3.2":
-        return
-    if model == "qwen2.5-coder:1.5b":
-        main_config = "Seja um copiloto, pronto para receber grandes quantias de código bruto de uma vez só, pronto para resolver bugs rápidos, gerar código e ser o professor de uma linguagem específica (caso o usuário pedir)."
-    elif model in ["gemma", "gemma:7b", "gemma 4"]: # Adicionado variação que apareceu no seu print
-        main_config = "Seja o copiloto do usuário, pronto para receber Muito código, resolver bugs massivos, pensar rápido, resolver questões, checar importações, sugerir comandos de terminal e fazer uma varredura completa no código solicitado."
-
 def main():
+    # Configuração de fuso horário e data para os logs
     fuso_brasil = zoneinfo.ZoneInfo("America/Sao_Paulo")
     agora_brasil = datetime.now(fuso_brasil)
     data_formatada = agora_brasil.strftime("%d/%m/%Y %H:%M:%S")
     
     if len(sys.argv) < 2:
-        print("Erro: Nenhuma pergunta enviada.")
+        sys.stderr.write("Erro: Nenhuma pergunta enviada.\n")
         return
         
     pergunta = sys.argv[1]
-    modelo = sys.argv[2] if len(sys.argv) > 2 else "llama3.2"
+    modelo_recebido = sys.argv[2].lower() if len(sys.argv) > 2 else "llama3.2"
     ip = sys.argv[3] if len(sys.argv) > 3 else "IP_NAO_DETECTADO"
     
-    if modelo:
-        modelo = modelo.lower()
+    # 🌟 MAPEAMENTO DOS SEUS MODELOS CUSTOMIZADOS DO OLLAMA
+    # Se o Node pedir o Llama original para o teste gratuito ou o Gemma, usamos seu supercore-assistant
+    if modelo_recebido in ["llama3.2", "gemma2", "supercore-assistant"]:
+        modelo_final = "supercore-assistant"
+    # Se o Node pedir o deepseek ou qualquer variação de código, jogamos para o seu supercorecode
+    elif "deepseek" in modelo_recebido or "code" in modelo_recebido or "qwen" in modelo_recebido:
+        modelo_final = "supercorecode"
+    else:
+        # Fallback de segurança caso chegue algo totalmente inesperado
+        modelo_final = "supercore-assistant"
     
-    set_main_config_of_model(modelo)
-    
+    # Monta a lista de mensagens. O "system prompt" não é mais necessário aqui
+    # porque ele já foi embutido direto no manifesto de cada modelo via Modelfile!
     lista_mensagens = [
-        {"role": "system", "content": main_config},
         {"role": "user", "content": pergunta}
     ]
     
-    # Garante que a pasta de logs existe para não dar erro de diretório
+    # Garante que a pasta de logs existe
     os.makedirs("logs", exist_ok=True)
     
-    # Salvando os logs corretamente em modo append ("a")
+    # Salvando os logs mantendo o seu padrão exato
     with open("logs/logs.txt", "a", encoding="utf-8") as file:
-        file.write(f"Novo acesso em {data_formatada}. IP: {ip}\n")
+        file.write(f"Novo acesso em {data_formatada}. IP: {ip} | Modelo Usado: {modelo_final}\n")
         
     with open("logs/ask.txt", "a", encoding="utf-8") as file:
         file.write(f"Chat do acesso do ip {ip}: {pergunta}\n")
         
     try:
+        # Faz a chamada ao Ollama usando o modelo mapeado
+        # Nota: As opções de 'temperature' e 'num_threads' já estão salvas no modelo,
+        # mas mantivemos o num_threads=2 aqui caso queira forçar o limite de CPU do servidor.
         resposta = ollama.chat(
-            model=modelo,
+            model=modelo_final,
             messages=lista_mensagens,
             options={
-                "temperature": 0.56, 
                 "num_threads": 2
             }
         )
         
         texto_resposta = resposta["message"]["content"]
+        
+        # Tratamento de segurança caso o modelo repita a tag do papel
         if texto_resposta.lower().startswith("assistant"):
             texto_resposta = texto_resposta[9:].strip()
             
