@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Faça seu Cadastro || SuperCore</title>
     <link rel="stylesheet" href="style.css">
-    <script type="module" src="/dist/readyfetch.js" defer></script>
-    <script src="index.js" defer></script>
+    <script src="index.js" type="module" defer></script>
 </head>
 <body>
     <section class="st">
@@ -15,12 +14,15 @@
     </section>
     <br>
     <section class="cmp">
-        <label for="name">Nome de Usuário: </label>
-        <input type="text" id="name">
+        <label for="usr">Nome de Usuário: </label>
+        <input type="text" id="usr">
         <br>
         <label for="psw">Senha: </label>
         <input type="password" id="psw">
     </section>
+    
+    <div id="error-container" style="color: red; margin: 10px 0;"></div>
+
     <button type="button" id="env">Enviar dados</button>
 </body>
 </html>
