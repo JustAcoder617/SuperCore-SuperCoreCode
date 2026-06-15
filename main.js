@@ -22,7 +22,7 @@ const db = mysql.createConnection({
     host: process.env.db_host,
     user: process.env.db_user,
     password: process.env.db_psw,
-    database: "supercore_db"
+    database: process.env.db_name
 });
 
 app.use(cookieParser());
