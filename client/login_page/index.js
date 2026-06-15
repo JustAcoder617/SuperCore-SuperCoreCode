@@ -20,6 +20,8 @@ function set_err(type) {
 }
 
 async function set_button(estado) {
+    if (!env_btn) return; 
+
     const textoOriginal = "Enviar dados";
     set_err("");
 
@@ -40,7 +42,10 @@ async function set_button(estado) {
         env_btn.innerText = "Usuário ou senha incorretos!";
         set_err("l");
         await sleep(2000);
-        env_btn.removeAttribute("style");
+        
+        env_btn.style.boxShadow = "";
+        env_btn.style.backgroundColor = "";
+        env_btn.style.color = "";
         env_btn.innerText = textoOriginal;
         return;
     }
@@ -50,9 +55,12 @@ async function set_button(estado) {
         env_btn.style.backgroundColor = "red";
         env_btn.style.color = "white";
         env_btn.innerText = "Erro no servidor!";
-        set_err("c");
+        set_err("s"); 
         await sleep(2000);
-        env_btn.removeAttribute("style");
+        
+        env_btn.style.boxShadow = "";
+        env_btn.style.backgroundColor = "";
+        env_btn.style.color = "";
         env_btn.innerText = textoOriginal;
     }
 }
@@ -75,10 +83,8 @@ async function login(user, password) {
 
     try {
         const result = await true_fetch("/login", { user, password }, true, true);
-
-        // Se o servidor retornar 200 mas com mensagem de erro interna
+        
         if (!result || !result.message) {
-            set_err("s");
             return set_button(3);
         }
 
@@ -89,27 +95,33 @@ async function login(user, password) {
         if (result.message === "Login efetuado com sucesso!") {
             await set_button(1);
         } else {
-            set_err("s");
             await set_button(3);
         }
     } catch (err) {
+        // Se cair no catch por erro de rede (Ex: servidor caído)
         if (err.message && err.message.includes("401")) {
             return set_button(2);
         }
 
         console.error("Erro na requisição:", err);
+        set_err("c");
         await set_button(3);
     }
 }
-env_btn.addEventListener("click", async () => {
-    if (env_btn.disabled) return; // Evita múltiplos cliques simultâneos
-    
-    const user = username_input.value.trim();
-    const password = password_input.value;
-    
-    env_btn.disabled = true; 
-    await login(user, password);
-    env_btn.disabled = false;
-});
 
-window.addEventListener("load", verificarLogin);
+if (env_btn && username_input && password_input) {
+    env_btn.addEventListener("click", async () => {
+        if (env_btn.disabled) return;
+        
+        const user = username_input.value.trim();
+        const password = password_input.value;
+        
+        env_btn.disabled = true; 
+        await login(user, password);
+        env_btn.disabled = false;
+    });
+
+    window.addEventListener("load", verificarLogin);
+} else {
+    console.error("Elementos do formulário de login não foram encontrados no DOM.");
+}
