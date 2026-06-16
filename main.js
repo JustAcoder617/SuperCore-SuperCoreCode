@@ -56,7 +56,24 @@ const autenticarToken = (req, res, next) => {
 };
 
 // ================================= rotas api ===================================
-
+function isJSONString(str) {
+    if (typeof str !== 'string') return false;
+    
+    try {
+        JSON.parse(str);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+async function check_ia_request_for_net(data) {
+    const check=isJSONString(data);
+    if(check===false){
+        return null;
+    }
+    if(!data.requer_internet){return null}
+    
+}
 app.post("/chat", (req, res) => {
     const { content, model: modelo_ia } = req.body;
     
