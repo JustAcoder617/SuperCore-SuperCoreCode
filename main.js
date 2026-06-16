@@ -58,7 +58,6 @@ const autenticarToken = (req, res, next) => {
 // ================================= rotas api ===================================
 function isJSONString(str) {
     if (typeof str !== 'string') return false;
-    
     try {
         JSON.parse(str);
         return true;
@@ -66,46 +65,84 @@ function isJSONString(str) {
         return false;
     }
 }
-async function check_ia_request_for_net(data) {
-    const check=isJSONString(data);
-    if(check===false){
+
+async function buscarNoSearXNG(termo) {
+    const url = 'http://localhost:8080/search';
+    const corpo = new URLSearchParams();
+    corpo.append('q', termo);
+    corpo.append('format', 'json');
+    corpo.append('lang', 'pt-BR');
+
+    try {
+        const resposta = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: corpo
+        });
+        const dados = await resposta.json();
+        return dados.results.slice(0, 3).map(item => {
+            return `Título: ${item.title} | Contexto: ${item.content}`;
+        }).join('\n');
+    } catch (erro) {
+        console.error(erro);
         return null;
     }
-    if(!data.requer_internet){return null}
-    
 }
-app.post("/chat", (req, res) => {
+
+function executarPython(prompt, modelo, ip) {
+    return new Promise((resolve, reject) => {
+        const processoPython = spawn("python3", ["main.py", prompt, modelo, ip]);
+        let resultado = "";
+        let erro = "";
+
+        processoPython.stdout.on("data", (data) => { resultado += data.toString(); });
+        processoPython.stderr.on("data", (data) => { erro += data.toString(); });
+
+        processoPython.on("close", (code) => {
+            if (code === 0) resolve(resultado.trim());
+            else reject(erro || code);
+        });
+    });
+}
+app.post("/chat", async (req, res) => {
     const { content, model: modelo_ia } = req.body;
     
     if (!content || !modelo_ia || typeof content !== "string" || typeof modelo_ia !== "string" || content.trim() === "") {
         return res.status(400).send("Prompt inválido.");
     }
     
-    console.log("=== DEBUG DA REQUISIÇÃO ===");
-    console.log("Pergunta recebida:", content);
-    console.log("Modelo escolhido:", modelo_ia);
-    console.log("===========================");
-    
     let ip = req.ip;
-    const processoPython = spawn("python3", ["main.py", content, modelo_ia, ip]);
 
-    let respostaDaIA = "";
+    try {
+        let respostaDaIA = await executarPython(content, modelo_ia, ip);
 
-    processoPython.stdout.on("data", (data) => {
-        respostaDaIA += data.toString();
-    });
+        if (isJSONString(respostaDaIA)) {
+            const objetoIA = JSON.parse(respostaDaIA);
 
-    processoPython.stderr.on("data", (data) => {
-        console.error(`Erro no Python: ${data}`);
-    });
+            if (objetoIA.requer_internet === true && objetoIA.termo_busca) {
+                const resultadosWeb = await buscarNoSearXNG(objetoIA.termo_busca);
 
-    processoPython.on("close", (code) => {
-        if (code === 0) {
-            res.json({ message: respostaDaIA.trim() });
-        } else {
-            res.status(500).json({ message: "Erro ao processar a IA no servidor." });
+                if (resultadosWeb) {
+                    const novoPromptContexto = `
+                        O usuário perguntou: "${content}"
+                        Dados atuais encontrados na internet:
+                        ${resultadosWeb}
+                        
+                        Por favor, formule a resposta final baseando-se nestes dados.
+                    `;
+                    respostaDaIA = await executarPython(novoPromptContexto, modelo_ia, ip);
+                } else {
+                    respostaDaIA = "Desculpe, tive dificuldades para acessar a internet e coletar dados em tempo real agora.";
+                }
+            }
         }
-    });
+
+        return res.json({ message: respostaDaIA });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Erro ao processar a IA no servidor." });
+    }
 });
 
 app.get("/", (req, res) => {

@@ -15,8 +15,8 @@ elif [ "$(docker ps -a -q -f name=$CONTAINER_NAME)" ]; then
 else
     echo "[Status] Primeira execução. Baixando e criando o contêiner..."
     docker run -d \
-        --name $CONTAINER_NAME \
-        -p 8080:8080 \
-        -d searxng/searxng
-    echo "[Sucesso] Buscador criado e iniciado em http://localhost:8080"
+    --name $CONTAINER_NAME \
+    -p 8080:8080 \
+    -e SEARXNG_SETTINGS="{\"search\":{\"formats\":[\"json\"]}}" \
+    searxng/searxng
 fi
