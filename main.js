@@ -55,7 +55,7 @@ const autenticarToken = (req, res, next) => {
     });
 };
 
-// ================================= rotas api ===================================
+// ================================= Funções Auxiliares ===================================
 function isJSONString(str) {
     if (typeof str !== 'string') return false;
     try {
@@ -68,6 +68,7 @@ function isJSONString(str) {
 
 async function buscarNoSearXNG(termo) {
     const url = 'http://localhost:8080/search';
+    
     const corpo = new URLSearchParams();
     corpo.append('q', termo);
     corpo.append('format', 'json');
@@ -76,22 +77,38 @@ async function buscarNoSearXNG(termo) {
     try {
         const resposta = await fetch(url, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: { 
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json',
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            },
             body: corpo
         });
+
+        if (!resposta.ok) {
+            throw new Error(`Erro no SearXNG: Status ${resposta.status}`);
+        }
+
         const dados = await resposta.json();
-        return dados.results.slice(0, 3).map(item => {
-            return `Título: ${item.title} | Contexto: ${item.content}`;
+        
+        if (!dados.results || dados.results.length === 0) {
+            return "Nenhum resultado encontrado.";
+        }
+        return dados.results.slice(0, 6).map(item => {
+            console.log(`Resultado encontrado: ${item.title}`);
+            const textoInformativo = item.content || item.snippet || "";
+            return `Título: ${item.title} | Contexto: ${textoInformativo}`;
         }).join('\n');
+
     } catch (erro) {
-        console.error(erro);
+        console.error("Erro ao buscar no SearXNG:", erro);
         return null;
     }
 }
 
-function executarPython(prompt, modelo, ip) {
+function executarPython(prompt, modelo, ip, cargo) {
     return new Promise((resolve, reject) => {
-        const processoPython = spawn("python3", ["main.py", prompt, modelo, ip]);
+        const processoPython = spawn("python3", ["main.py", prompt, modelo, ip, cargo]);
         let resultado = "";
         let erro = "";
 
@@ -100,16 +117,19 @@ function executarPython(prompt, modelo, ip) {
 
         processoPython.on("close", (code) => {
             if (code === 0) resolve(resultado.trim());
-            else reject(erro || code);
+            else reject(erro || `Código de saída: ${code}`);
         });
     });
 }
+
+// ================================= Rotas API ===================================
 app.post("/chat", async (req, res) => {
     const { content, model: modelo_ia } = req.body;
     
     if (!content || !modelo_ia || typeof content !== "string" || typeof modelo_ia !== "string" || content.trim() === "") {
         return res.status(400).send("Prompt inválido.");
     }
+    console.log(`Nova request: prompt: ${content} modelo: ${modelo_ia}`);
     
     let ip = req.ip;
 
@@ -118,29 +138,49 @@ app.post("/chat", async (req, res) => {
 
         if (isJSONString(respostaDaIA)) {
             const objetoIA = JSON.parse(respostaDaIA);
-
+            console.log(`Request em JSON da IA: \n ${respostaDaIA}`);
+            
             if (objetoIA.requer_internet === true && objetoIA.termo_busca) {
                 const resultadosWeb = await buscarNoSearXNG(objetoIA.termo_busca);
 
                 if (resultadosWeb) {
                     const novoPromptContexto = `
-                        O usuário perguntou: "${content}"
-                        Dados atuais encontrados na internet:
+                        Ano Atual do Sistema: 2026.
+                        O usuário solicitou informações atualizadas: "${content}"
+                        
+                        Dados e notícias reais coletados da internet em tempo real:
                         ${resultadosWeb}
                         
-                        Por favor, formule a resposta final baseando-se nestes dados.
+                        DIRETRIZES PARA A RESPOSTA FINAL:
+                        - Escreva uma resposta detalhada, organizada e rica em conteúdo utilizando as informações acima.
+                        - Use formatação Markdown (negritos, bullet points) para estruturar melhor a resposta.
+                        - Responda estritamente em formato de texto corrente. PROIBIDO usar JSON aqui.
                     `;
+                    
                     respostaDaIA = await executarPython(novoPromptContexto, modelo_ia, ip);
+                    if (isJSONString(respostaDaIA)) {
+                        console.log("IA insistiu no JSON na rodada final. Forçando renderização direta...");
+                        respostaDaIA = `Aqui estão as informações mais recentes encontradas sobre o seu pedido:\n\n${resultadosWeb}`;
+                    }
                 } else {
                     respostaDaIA = "Desculpe, tive dificuldades para acessar a internet e coletar dados em tempo real agora.";
                 }
+            } else {
+                console.log("IA tentou dar migué com 'requer_internet: false'. Forçando resposta textual...");
+                const promptForçado = `
+                    Você é o SuperCore. O usuário perguntou: "${content}".
+                    Você determinou que não precisa da internet para isso. 
+                    Portanto, responda AGORA em texto amigável e corrido em português. 
+                    NÃO ENVIE código JSON.
+                `;
+                respostaDaIA = await executarPython(promptForçado, modelo_ia, ip, "system");
             }
         }
 
-        return res.json({ message: respostaDaIA });
+        return res.status(200).json({ message: respostaDaIA });
 
     } catch (err) {
-        console.error(err);
+        console.error("Erro interno no fluxo do chat:", err);
         return res.status(500).json({ message: "Erro ao processar a IA no servidor." });
     }
 });

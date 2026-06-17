@@ -9,6 +9,13 @@ const dadosParaEnviar = {
 async function wait_for_ia_reponse(perguntaAtual) {
     document.getElementById("response").innerHTML = `Pensando...`;
 
+    const internetTimer = setTimeout(() => {
+        const statusElement = document.getElementById("response");
+        if (statusElement && statusElement.innerText === "Pensando...") {
+            statusElement.innerText = "Pesquisando na internet com o SearXNG...";
+        }
+    }, 3500);
+
     dadosParaEnviar.content = perguntaAtual;
     dadosParaEnviar.model = get_model_ia_use();
 
@@ -21,13 +28,16 @@ async function wait_for_ia_reponse(perguntaAtual) {
             body: JSON.stringify(dadosParaEnviar)
         });
         
+        clearTimeout(internetTimer);
+
         if (response.ok) {
             const dadosResposta = await response.json();
-            document.getElementById("response").innerText = dadosResposta.message;
+            document.getElementById("response").innerHTML = marked.parse(dadosResposta.message);
         } else {
             document.getElementById("response").innerText = "Desculpe, mas ocorreu um erro no servidor.";
         }
     } catch(err) {
+        clearTimeout(internetTimer);
         console.error(err);
         document.getElementById("response").innerText = "Erro de conexão com o servidor.";
     }

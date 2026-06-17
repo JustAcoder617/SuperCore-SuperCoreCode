@@ -15,6 +15,7 @@ def main():
         
     pergunta = sys.argv[1]
     modelo_recebido = sys.argv[2].lower() if len(sys.argv) > 2 else "llama3.2"
+    cargo=sys.argv[4].lower if len(sys.argv) > 4 else "user"
     ip = sys.argv[3] if len(sys.argv) > 3 else "IP_NAO_DETECTADO"
     
     if modelo_recebido in ["llama3.2", "gemma2", "supercore-assistant"]:

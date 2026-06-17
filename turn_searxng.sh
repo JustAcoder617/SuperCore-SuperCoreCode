@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONTAINER_NAME="meu_searxng"
+CONTAINER_NAME="sp_searxng"
 
 if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
     echo "[Status] O buscador está LIGADO. Desligando..."
