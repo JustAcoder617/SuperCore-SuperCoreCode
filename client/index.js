@@ -32,7 +32,7 @@ async function wait_for_ia_reponse(perguntaAtual) {
 
         if (response.ok) {
             const dadosResposta = await response.json();
-            document.getElementById("response").innerHTML = marked.parse(dadosResposta.message);
+            document.getElementById("response").innerHTML = dadosResposta.message;
         } else {
             document.getElementById("response").innerText = "Desculpe, mas ocorreu um erro no servidor.";
         }
