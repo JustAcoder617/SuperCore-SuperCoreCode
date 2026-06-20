@@ -5,14 +5,20 @@ const dadosParaEnviar = {
     content: "",
     model: ""
 };
-
+function renderizarMarkdown(textoMarkdown) {
+    const htmlSujo = marked.parse(textoMarkdown);
+    
+    const htmlSeguro = DOMPurify.sanitize(htmlSujo);
+    
+    return htmlSeguro;
+}
 async function wait_for_ia_reponse(perguntaAtual) {
     document.getElementById("response").innerHTML = `Pensando...`;
 
     const internetTimer = setTimeout(() => {
         const statusElement = document.getElementById("response");
         if (statusElement && statusElement.innerText === "Pensando...") {
-            statusElement.innerText = "Pesquisando na internet com o SearXNG...";
+            statusElement.innerText = "Pesquisando na internet...";
         }
     }, 3500);
 
@@ -25,14 +31,15 @@ async function wait_for_ia_reponse(perguntaAtual) {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(dadosParaEnviar)
+            body: JSON.stringify(dadosParaEnviar),
+            timeout: 90000
         });
         
         clearTimeout(internetTimer);
 
         if (response.ok) {
             const dadosResposta = await response.json();
-            document.getElementById("response").innerHTML = dadosResposta.message;
+            document.getElementById("response").innerHTML = renderizarMarkdown(dadosResposta.message);
         } else {
             document.getElementById("response").innerText = "Desculpe, mas ocorreu um erro no servidor.";
         }
